@@ -8,11 +8,6 @@
             <div class="card-header">Editar {{$user->name}}</div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
                     
                     {{-- Formulario de edición  con método PUT y csrf token de seguridad --}}
                     <form action={{route('admin.users.update', $user)}} method = "POST">

@@ -7,6 +7,7 @@ use App\User;
 use App\Role;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 
 class UsersController extends Controller
@@ -26,7 +27,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users= User::all();
+        $users= User::paginate(8);
         return view('admin.users.index', compact('users'));
     }
 
@@ -37,7 +38,13 @@ class UsersController extends Controller
      */
     public function create()
     {
-        //
+        // Control de acceso mediante Gate
+        if (Gate::denies('create-users')) {
+            session()->flash('error','Acción no autorizada');
+            return redirect(route('admin.users.index'));
+        }
+
+        return view('admin.users.create');
     }
 
     /**
@@ -48,7 +55,36 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Control de acceso Gate
+        if (Gate::denies('create-users')) {
+            return redirect(route('admin.users.index'));
+        }
+
+        // Validación del formulario
+        $validatedData = $request->validate
+        ([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $user = User::create([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => Hash::make($request['password']),
+        ]);
+
+        // Usuario que se acaba de registrar le asignamos perfil user
+        $role = Role::select('id')->where('name','user')->first();
+        $user->roles()->attach($role);
+
+        if($user) {
+            $request->session()->flash('success','Usuario creado con éxito'); 
+        }else {
+            $request->session()->flash('error','Formulario no validado'); 
+        }
+
+        return redirect()->route('admin.users.index');
     }
 
     /**

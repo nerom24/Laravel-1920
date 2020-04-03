@@ -7,14 +7,11 @@
             @include('partials.alerts')
             <div class="card">
                 <div class="card-header">Usuarios</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    
+                {{-- <div class="card-header">
+                    @include('admin.users.partials.menu')
+                </div> --}}
+                <div class="card-body"> 
+                    @include('admin.users.partials.menu')
                     {{-- Muestra los usuarios en una tabla --}}
 
                     <table class="table">
@@ -57,9 +54,10 @@
 
                     </tbody>
                     </table>
-
+                    @include('admin.users.partials.paginado')
+                </div>
+                <div class="card-footer text-muted">
                     Total Usuarios: {{$users->count()}}
-
                 </div>
             </div>
         </div>
