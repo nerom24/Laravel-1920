@@ -18,7 +18,7 @@
                         {{-- Campo Name --}}
                         <div class="form-group">
                             <label class="form-label">{{ __('Nombre') }}</label>
-                            <input id="name" type="text" name="name" class="form-control @error('name') is-invalid @enderror"  value={{ $user->name }}>
+                            <input id="name" type="text" name="name" class="form-control @error('name') is-invalid @enderror"  value="{{ $user->name }}">
                             @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

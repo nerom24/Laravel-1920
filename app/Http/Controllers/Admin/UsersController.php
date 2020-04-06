@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
 use App\Http\Controllers\Controller;
+use App\Mail\MailRegister;
 use App\User;
 use App\Role;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 
 
 class UsersController extends Controller
@@ -84,6 +86,9 @@ class UsersController extends Controller
             $request->session()->flash('error','Formulario no validado'); 
         }
 
+        // Enviar email de confirmación al usuario registrado
+        Mail::to($user->email)->send(new MailRegister($user));
+
         return redirect()->route('admin.users.index');
     }
 
@@ -128,6 +133,16 @@ class UsersController extends Controller
         if (Gate::denies('edit-users')) {
             return redirect(route('admin.users.index'));
         }
+
+        // Validación de update
+        $validatedData = $request->validate
+        ([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 
+                       Rule::unique('users')->ignore($user->id)]
+        ]);
+        
+
         
         // Sync Acepta una matriz de roles para colocar en la tabla user_role
         // los valores que no estén los elimina
@@ -142,7 +157,8 @@ class UsersController extends Controller
         }else {
             $request->session()->flash('error','Ocurrió un error en la actualización'); 
         }
-        
+
+                
         return redirect()->route('admin.users.index');
     }
 
