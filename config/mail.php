@@ -84,7 +84,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'nerom24@gmail.com'),
-        'name' => env('MAIL_FROM_NAME', 'Juan Carlos'),
+        'name' => env('MAIL_FROM_NAME', 'DWES - Curso 19/20'),
     ],
 
     /*

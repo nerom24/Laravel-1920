@@ -82,4 +82,17 @@ class User extends Authenticatable
 
         abort(403, 'Acción No Autorizada');
     }
+
+    # Habilitar las búsquedas en el panel de control de usuarios
+    public function scopeSearch($query, $search) {
+
+
+        if ($search) {
+
+		    return $query->where('id', 'LIKE', "%$search%")
+					 ->orWhere('name', 'LIKE', "%$search%")
+                     ->orWhere('email', 'LIKE', "%$search%");
+        }
+					 
+	}
 }

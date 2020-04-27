@@ -27,9 +27,9 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users= User::paginate(8);
+        $users= User::search($request->search)->paginate(8);
         return view('admin.users.index', compact('users'));
     }
 

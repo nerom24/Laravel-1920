@@ -49,7 +49,7 @@
                             </td>
                         </tr>
                     @empty
-	                    <li>No hay usuarios registrados.</li>
+	                    <li>No hay registros seleccionados</li>
                     @endforelse
 
                     </tbody>
